@@ -47,7 +47,7 @@ def report_data_source(df,df_name):
     logging.info("DataSource %s, its format is %s and its schema is %s" %(name,format_ds,schema_field))
 
 
-def report_link(froms,to, stats_for_to=True):
+def report_link(froms,to, current_runtime,stats_for_to=True):
     from_schemas = [schem_def[frm] for frm in froms]
     to_schema = schem_def[to]
 
@@ -80,10 +80,10 @@ def report_link(froms,to, stats_for_to=True):
                 if not math.isnan(e[el][st]):
                     statistics[el+'.'+st] = e[el][st]
 
-        logging.info("New statistics linked to the execution: %s which refferred to schema %s" %(statistics,elem))             
+        logging.info("New statistics linked to the execution: %s which refers to schema %s" %(statistics,elem))             
 
 
-def report_model(train,test,x_test,y_test,model,model_path):
+def report_model(train,test,x_test,y_test,model,model_path,current_runtime):
     
     import pandas as pd
     logging.info("------New model instance created:------")
@@ -100,10 +100,10 @@ def report_model(train,test,x_test,y_test,model,model_path):
     ds_pk = name
     
     try:
-        model_df = pd.DataFrame(model.coef_[0].reshape(1,21), columns=list(dataframes[train].columns))
+        model_df = pd.DataFrame(model.coef_[0].reshape(1,len(dataframes[train].columns)), columns=list(dataframes[train].columns))
 
     except:
-        model_df = pd.DataFrame(model.feature_importances_.reshape(1,21), columns=list(dataframes[train].columns))
+        model_df = pd.DataFrame(model.feature_importances_.reshape(1,len(dataframes[train].columns)), columns=list(dataframes[train].columns))
 
     
     fields = model_df.dtypes.to_dict()
